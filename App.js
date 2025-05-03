@@ -3,6 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View } from 'react-native';
 import { Provider as PaperProvider, DefaultTheme } from 'react-native-paper';
 import AppNavigator from './navigation/AppNavigator';
+import { Platform } from 'react-native';
 
 // Define the theme
 const theme = {
@@ -33,5 +34,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f5f5f5',
+    ...Platform.select({
+      web: {
+        height: '100vh',
+        width: '100vw',
+      },
+    }),
   },
 });
