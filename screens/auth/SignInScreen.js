@@ -1,30 +1,103 @@
 // screens/auth/SignInScreen.js
 import React, { useState } from 'react';
-import { View, TextInput, Button, Text } from 'react-native';
+import { View, StyleSheet } from 'react-native';
+import { TextInput, Button, Text, Surface, useTheme } from 'react-native-paper';
 import { auth } from '../../firebase/config';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 
 export default function SignInScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const theme = useTheme();
 
   const handleSignIn = async () => {
     try {
+      setLoading(true);
       await signInWithEmailAndPassword(auth, email, password);
       navigation.replace("StudentHome");
     } catch (error) {
       alert(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <View style={{ padding: 20 }}>
-      <Text>Email</Text>
-      <TextInput value={email} onChangeText={setEmail} />
-      <Text>Password</Text>
-      <TextInput secureTextEntry value={password} onChangeText={setPassword} />
-      <Button title="Sign In" onPress={handleSignIn} />
-      <Text onPress={() => navigation.navigate('SignUp')}>Don't have an account? Sign Up</Text>
+    <View style={styles.container}>
+      <Surface style={styles.surface} elevation={4}>
+        <Text style={styles.title} variant="headlineMedium">Welcome Back</Text>
+        <Text style={styles.subtitle} variant="bodyLarge">Sign in to continue</Text>
+        
+        <TextInput
+          label="Email"
+          value={email}
+          onChangeText={setEmail}
+          mode="outlined"
+          style={styles.input}
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
+        
+        <TextInput
+          label="Password"
+          value={password}
+          onChangeText={setPassword}
+          mode="outlined"
+          secureTextEntry
+          style={styles.input}
+        />
+        
+        <Button
+          mode="contained"
+          onPress={handleSignIn}
+          style={styles.button}
+          loading={loading}
+          disabled={loading}
+        >
+          Sign In
+        </Button>
+        
+        <Text 
+          style={styles.link}
+          onPress={() => navigation.navigate('SignUp')}
+        >
+          Don't have an account? Sign Up
+        </Text>
+      </Surface>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    justifyContent: 'center',
+  },
+  surface: {
+    padding: 20,
+    borderRadius: 10,
+  },
+  title: {
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  subtitle: {
+    textAlign: 'center',
+    marginBottom: 24,
+    opacity: 0.7,
+  },
+  input: {
+    marginBottom: 16,
+  },
+  button: {
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  link: {
+    textAlign: 'center',
+    marginTop: 16,
+    color: '#f4511e',
+  },
+});

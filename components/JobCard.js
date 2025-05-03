@@ -1,29 +1,57 @@
 import React from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { StyleSheet } from 'react-native';
+import { Text, Card, useTheme } from 'react-native-paper';
 
 export default function JobCard({ job }) {
-  const navigation = useNavigation();
+  const theme = useTheme();
 
   return (
-    <View style={styles.card}>
-      <Text style={styles.title}>{job.title}</Text>
-      <Text style={styles.company}>{job.company}</Text>
-      <Text style={styles.location}>📍 {job.location}</Text>
-      <Text style={styles.description}>{job.description}</Text>
-      <Button
-        title="Apply"
-        onPress={() => navigation.navigate("ApplyJob", { job })}
-      />
-    </View>
+    <Card.Content>
+      <Text style={styles.title} variant="titleLarge">{job.title}</Text>
+      <Text style={styles.company} variant="titleMedium">{job.company}</Text>
+      <Text style={styles.location} variant="bodyMedium">
+        📍 {job.location}
+      </Text>
+      <Text style={styles.description} variant="bodyMedium">
+        {job.description}
+      </Text>
+      {job.salary && (
+        <Text style={styles.salary} variant="bodyMedium">
+          💰 {job.salary}
+        </Text>
+      )}
+      {job.requirements && (
+        <Text style={styles.requirements} variant="bodyMedium">
+          📋 Requirements: {job.requirements}
+        </Text>
+      )}
+    </Card.Content>
   );
 }
 
 const styles = StyleSheet.create({
-  card: { backgroundColor: "#f2f2f2", padding: 15, marginVertical: 10, borderRadius: 10 },
-  title: { fontSize: 18, fontWeight: 'bold' },
-  company: { fontSize: 16, color: 'gray' },
-  location: { marginVertical: 4 },
-  description: { marginBottom: 10 }
+  title: {
+    marginBottom: 4,
+    fontWeight: 'bold',
+  },
+  company: {
+    marginBottom: 8,
+    opacity: 0.7,
+  },
+  location: {
+    marginBottom: 8,
+  },
+  description: {
+    marginBottom: 8,
+    lineHeight: 20,
+  },
+  salary: {
+    marginBottom: 8,
+    color: '#4CAF50',
+  },
+  requirements: {
+    marginBottom: 8,
+    fontStyle: 'italic',
+  },
 });
 
